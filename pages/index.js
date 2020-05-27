@@ -1,209 +1,274 @@
 import Head from 'next/head'
+import styled from '@emotion/styled';
+import { Global, css } from '@emotion/core';
+import lorem from 'lorem-ipsum-french';
+import { useState } from 'react';
+
+const globalStyles = css`
+  html {
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  body {
+    margin: 0;
+    padding: 0 12.5%;
+    height: 100vh;
+    font-family: Avenir Next;
+  }
+`;
+
+const Filigrane = styled.h1`
+  position: fixed;
+  top: calc(50vh - 100px);
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  width: 75%;
+  text-decoration: underline;
+  font-size: 200px;
+  color: white;
+  text-shadow: 1px 1px black, -1px -1px black, 1px -1px black, -1px 1px black;
+`;
+
+const About = styled.div`
+  display: ${props => props.show ? 'block' : 'none'};
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  max-height: calc(100vh - 200px);
+  width: calc(100vw - 22%);
+  margin: 100px 11%;
+  padding: 40px 80px 40px 40px;
+  background: white;
+  border: 2px solid black;
+  overflow: scroll;
+
+  main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .text {
+     flex: 2;
+     padding-right: 30px;
+    }
+
+    .image {
+      flex: 1;
+    }
+  }
+
+  button {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 20px;
+  }
+`;
+
+const Header = styled.header`
+  box-sizing: border-box;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  width: 75%;
+  height: 100px;
+  top: 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    user-select: none;
+    cursor: pointer;
+  }
+`;
+
+const Footer = styled.footer`
+  box-sizing: border-box;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100px;
+  bottom: 0px;
+  text-align: center;
+`;
+
+const Main = styled.main``;
+
+const SlideMultiple = ({ pictures, template, legend }) => {
+  const templates = {
+    singlePicture: {
+      columns: '1fr',
+      rows: '1fr',
+    },
+    twoPictures: {
+      columns: '1fr 1fr',
+      rows: '1fr',
+    },
+    fourPictures: {
+      columns: '1fr 1fr',
+      rows: '1fr 1fr',
+    },
+    eightPictures: {
+      columns: '1fr 1fr 1fr 1fr',
+      rows: '1fr 1fr',
+    },
+  };
+
+  const Container = styled.div`
+    box-sizing: border-box;
+    width: 100%;
+    border: 2px solid white;
+    margin: 0;
+    padding: 100px 0;
+  `;
+
+  const Grid = styled.div`
+    display: grid;
+    grid-gap: 10px;
+    grid-template-rows: ${props => templates[props.template].rows};
+    grid-template-columns: ${props => templates[props.template].columns};
+  `;
+
+  const Legend = styled.p`
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    padding: 20px 30px;
+    margin: 0;
+    color: black;
+  `;
+
+  return (
+    <Container>
+      <Grid template={template}>
+        {pictures && pictures.map((picture, i) => {
+          return <div key={`pic-${i}`} className={`picture pic-${i}`}>
+            <img width="100%" src={picture} />
+          </div>
+        })}
+      </Grid>
+      <Legend>
+        {legend}
+      </Legend>
+    </Container>
+  );
+};
 
 export default function Home() {
+  const [shouldShowAboutPopin, toggleAboutPopin] = useState(true);
+
   return (
     <div className="container">
+      <Global styles={globalStyles}></Global>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main>
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/zeit/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
+      <About show={shouldShowAboutPopin}>
+        <button onClick={() => toggleAboutPopin(false)}>X</button>
+        <main>
+          <div className="text">
+            <h1>Sophie Harand</h1>
+            <p>{lorem(2)}</p>
+            <p>{lorem(1)}</p>
+          </div>
+          <div className="image">
+            <img src="https://media-exp1.licdn.com/dms/image/C5603AQGBMpzUCj_YrA/profile-displayphoto-shrink_800_800/0?e=1596067200&v=beta&t=iwtMyT9qDpL_1bGGYvXwm8kHBhtmvGpkg4FzmzcxnaE" />
+          </div>
+        </main>
+      </About>
+      <Filigrane className="title">
+        SH
+      </Filigrane>
+      <Header>
+        <a className="about" onClick={() => toggleAboutPopin(true)}>ABOUT</a>
+        <div className="contact">
+          <a target="_blank" href="mailto:sophieharand@gmail.com">CONTACT</a>
+        </div>
+        <div className="instagram">
+          <a target="_blank" href="https://www.instagram.com/monsieurpoulpe/">
+            <img src="/instagram.png" width="30" height="30" />
           </a>
         </div>
-      </main>
+      </Header>
+      <Main>
+        <SlideMultiple
+          legend="Sophie Harand est un designer de talent. Haha. Ça rime. LOL."
+          template="fourPictures"
+          pictures={[
+            `https://placem.at/things?w=1024&h=1000&random=${Math.random()}`,
+            `https://placem.at/things?w=1024&h=1000&random=${Math.random()}`,
+            `https://placem.at/things?w=1024&h=1000&random=${Math.random()}`,
+            `https://placem.at/things?w=1024&h=1000&random=${Math.random()}`,
+          ]}></SlideMultiple>
+        <SlideMultiple
+          legend={lorem(1)}
+          template="twoPictures"
+          pictures={[
+            `https://placem.at/things?w=1024&h=1800&random=${Math.random()}`,
+            `https://placem.at/things?w=1024&h=1800&random=${Math.random()}`,
+          ]}></SlideMultiple>
+        <SlideMultiple
+          legend={lorem(1)}
+          template="singlePicture"
+          pictures={[`https://placem.at/things?w=1024&h=768&random=${Math.random()}`]}>
+        </SlideMultiple>
+        <SlideMultiple
+          legend={lorem(1)}
+          template="eightPictures"
+          pictures={[
+            `https://placem.at/things?w=1024&h=1000&random=${Math.random()}`,
+            `https://placem.at/things?w=1024&h=1000&random=${Math.random()}`,
+            `https://placem.at/things?w=1024&h=1000&random=${Math.random()}`,
+            `https://placem.at/things?w=1024&h=1000&random=${Math.random()}`,
+            `https://placem.at/things?w=1024&h=1000&random=${Math.random()}`,
+            `https://placem.at/things?w=1024&h=1000&random=${Math.random()}`,
+            `https://placem.at/things?w=1024&h=1000&random=${Math.random()}`,
+            `https://placem.at/things?w=1024&h=1000&random=${Math.random()}`,
+          ]}></SlideMultiple>
+        <SlideMultiple
+          legend={lorem(1)}
+          template="twoPictures"
+          pictures={[
+            `https://placem.at/things?w=1024&h=3000&random=${Math.random()}`,
+            `https://placem.at/things?w=1024&h=3000&random=${Math.random()}`,
+          ]}></SlideMultiple>
 
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
-      </footer>
-
-      <style jsx>{`
-        .container {
-          min-height: 100vh;
-          padding: 0 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer img {
-          margin-left: 0.5rem;
-        }
-
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        a {
-          color: inherit;
-          text-decoration: none;
-        }
-
-        .title a {
-          color: #0070f3;
-          text-decoration: none;
-        }
-
-        .title a:hover,
-        .title a:focus,
-        .title a:active {
-          text-decoration: underline;
-        }
-
-        .title {
-          margin: 0;
-          line-height: 1.15;
-          font-size: 4rem;
-        }
-
-        .title,
-        .description {
-          text-align: center;
-        }
-
-        .description {
-          line-height: 1.5;
-          font-size: 1.5rem;
-        }
-
-        code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-size: 1.1rem;
-          font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-            DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-        }
-
-        .grid {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-
-          max-width: 800px;
-          margin-top: 3rem;
-        }
-
-        .card {
-          margin: 1rem;
-          flex-basis: 45%;
-          padding: 1.5rem;
-          text-align: left;
-          color: inherit;
-          text-decoration: none;
-          border: 1px solid #eaeaea;
-          border-radius: 10px;
-          transition: color 0.15s ease, border-color 0.15s ease;
-        }
-
-        .card:hover,
-        .card:focus,
-        .card:active {
-          color: #0070f3;
-          border-color: #0070f3;
-        }
-
-        .card h3 {
-          margin: 0 0 1rem 0;
-          font-size: 1.5rem;
-        }
-
-        .card p {
-          margin: 0;
-          font-size: 1.25rem;
-          line-height: 1.5;
-        }
-
-        .logo {
-          height: 1em;
-        }
-
-        @media (max-width: 600px) {
-          .grid {
-            width: 100%;
-            flex-direction: column;
-          }
-        }
-      `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
+        <SlideMultiple
+          legend={lorem(1)}
+          template="eightPictures"
+          pictures={[
+            `https://placem.at/things?w=200&h=200&random=${Math.random()}`,
+            `https://placem.at/things?w=200&h=200&random=${Math.random()}`,
+            `https://placem.at/things?w=200&h=200&random=${Math.random()}`,
+            `https://placem.at/things?w=200&h=200&random=${Math.random()}`,
+            `https://placem.at/things?w=200&h=200&random=${Math.random()}`,
+            `https://placem.at/things?w=200&h=200&random=${Math.random()}`,
+            `https://placem.at/things?w=200&h=200&random=${Math.random()}`,
+            `https://placem.at/things?w=200&h=200&random=${Math.random()}`,
+            `https://placem.at/things?w=200&h=200&random=${Math.random()}`,
+            `https://placem.at/things?w=200&h=200&random=${Math.random()}`,
+            `https://placem.at/things?w=200&h=200&random=${Math.random()}`,
+            `https://placem.at/things?w=200&h=200&random=${Math.random()}`,
+          ]}></SlideMultiple>
+      </Main>
+      <Footer>Sophie Harand, 2020</Footer>
     </div>
   )
 }
